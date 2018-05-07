@@ -27,16 +27,16 @@
       date_default_timezone_set("America/Los_Angeles");
       $currentDate = date("Y-m-d H:i:s");
       
-      $sql = "INSERT INTO `sensors` (`id`, `user_id`, `name`, `type`, `latitude`, `longitude`, `location`, `status`, `date`) VALUES (NULL, $user_id,'$name', '$type', '$latitude', '$longitude', '', 'Active', '$currentDate')";
+      $sql = "INSERT INTO `SENSOR_LIST` ( `OWNER`, `SENSOR_ID`, `TYPE`, `LATITUDE`, `LONGITUDE`, `STATUS`) VALUES ( $user_id,'$name', '$type', '$latitude', '$longitude', 'Active')";
       $result = mysqli_query($db,$sql);
       
       // If result matched $myusername and $mypassword, table row must be 1 row
     
       if($result) {
-         $prev_sql = mysqli_query($db,"select id, date from sensors where user_id = '$user_id' AND type = '$type' AND name = '$name' AND latitude = '$latitude' AND longitude = '$longitude' ");
+         $prev_sql = mysqli_query($db,"select ID, TIME_CREATED from SENSOR_LIST where OWNER = '$user_id' AND TYPE = '$type' AND SENSOR_ID = '$name' AND LATITUDE = '$latitude' AND LONGITUDE = '$longitude' ");
          $row = mysqli_fetch_array($prev_sql,MYSQLI_ASSOC);
-         $sensor_id = $row['id'];
-         $sensor_date = $row['date'];
+         $sensor_id = $row['ID'];
+         $sensor_date = $row['TIME_CREATED'];
          $sql = "INSERT INTO `usage_details` (`id`, `user_id`, `sensor_id`, `update_time`) VALUES (NULL, $user_id, '$sensor_id', '$sensor_date')";
          $result = mysqli_query($db,$sql);
       } else {
@@ -249,10 +249,10 @@
                           <select class="form-control" name="type">
                             <option>Choose type</option>
                             <option>Temperature</option>
-                            <option>Humidity</option>
-                            <option>Speed</option>
-                            <option>Smoke</option>
+                            <option>Sea Levels</option>
                             <option>Pressure</option>
+                            <option>Salinity</option>
+                            <option>Conductivity</option>
                           </select>
                         </div>
                       </div>

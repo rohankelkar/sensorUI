@@ -660,7 +660,7 @@
                           </tr>
                           <tr>
                             <td>
-                              <p><i class="fa fa-square green"></i>Humidity </p>
+                              <p><i class="fa fa-square green"></i>Sea Levels </p>
                             </td>
                             <td><?php 
                             if($sensors) {
@@ -673,7 +673,7 @@
                           </tr>
                           <tr>
                             <td>
-                              <p><i class="fa fa-square purple"></i>Speed </p>
+                              <p><i class="fa fa-square purple"></i>Pressure </p>
                             </td>
                             <td><?php 
                             if($sensors) {
@@ -686,7 +686,7 @@
                           </tr>
                           <tr>
                             <td>
-                              <p><i class="fa fa-square aero"></i>Smoke </p>
+                              <p><i class="fa fa-square aero"></i>Salinity </p>
                             </td>
                             <td><?php 
                             if($sensors) {
@@ -699,7 +699,7 @@
                           </tr>
                           <tr>
                             <td>
-                              <p><i class="fa fa-square red"></i>Pressure </p>
+                              <p><i class="fa fa-square red"></i>Conductivity </p>
                             </td>
                             <td><?php 
                             if($sensors) {

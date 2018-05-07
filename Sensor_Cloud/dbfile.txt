@@ -59,3 +59,17 @@ status varchar(10),
 time_created timestamp,
 time_updated timestamp on update current_timestamp
 );
+
+
+ALTER TABLE SENSOR_LIST ADD ID INT(12);
+alter table SENSOR_LIST add primary key(ID);
+alter table SENSOR_LIST modify ID int(12) auto_increment;
+ALTER TABLE SENSOR_LIST MODIFY TYPE VARCHAR(20);
+
+alter table usage_details add primary key(id);
+alter table usage_details modify id int(11) auto_increment;
+
+alter table usage_details modify used_hours int(11) default 0;
+alter table usage_details modify paused_hours int(11) default 0;
+
+ALTER TABLE SENSOR_LIST MODIFY STATUS VARCHAR(20);

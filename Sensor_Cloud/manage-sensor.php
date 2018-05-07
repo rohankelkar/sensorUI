@@ -43,7 +43,7 @@
               $UsedHours = round($UsedHours, 2);
               
               
-              $sql = mysqli_query($db,"update sensors set status = 'Paused' where id = $id");
+              $sql = mysqli_query($db,"update SENSOR_LIST set STATUS = 'Paused' where ID = $id");
               $sql_usage = mysqli_query($db,"update usage_details set update_time = '$currentDate', used_hours = '$UsedHours' where sensor_id = $id");
             
               if(! $sql_usage )
@@ -70,7 +70,7 @@
                 $PausedHours = $PausedHours+($diffSeconds/3600);
                 $PausedHours = round($PausedHours, 2);
                   
-                $sql = mysqli_query($db,"update sensors set status = 'Active' where id = $id");
+                $sql = mysqli_query($db,"update SENSOR_LIST set STATUS = 'Active' where ID = $id");
                 $sql_usage = mysqli_query($db,"update usage_details set update_time = '$currentDate', paused_hours = '$PausedHours' where sensor_id = $id");
               
                 if(! $sql_usage )
@@ -85,9 +85,9 @@
                   $currentDate= date("Y-m-d H:i:s");
                   $datetime1 = strtotime($currentDate);
 
-                  $result = mysqli_query($db,"Select * from usage_details inner join sensors on sensors.id = usage_details.sensor_id where sensor_id = $id");
+                  $result = mysqli_query($db,"Select * from usage_details inner join SENSOR_LIST on SENSOR_LIST.ID = usage_details.sensor_id where sensor_id = $id");
                   while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-                    $SensorStatus=$row['status'];
+                    $SensorStatus=$row['STATUS'];
                     $StartPauseTime=$row['update_time'];
                     $PausedHours=$row['paused_hours'];
                     $UsedHours=$row['used_hours'];
@@ -107,7 +107,7 @@
                     $q="used_hours='$UsedHours'";
                   }
                     
-                  $sql = mysqli_query($db,"update sensors set status = 'Terminated' where id = $id");
+                  $sql = mysqli_query($db,"update SENSOR_LIST set STATUS = 'Terminated' where ID = $id");
                   $sql_usage = mysqli_query($db,"update usage_details set update_time = '$currentDate', $q where sensor_id = $id");
                 
                   if(! $sql_usage )
@@ -294,7 +294,7 @@
                          
                          date_default_timezone_set('America/Los_Angeles');
                          
-                         $ses_sql = mysqli_query($db,"select sensors.latitude, sensors.longitude, sensors.id, sensors.name, sensors.type, sensors.location, sensors.status, sensors.date, usage_details.used_hours, usage_details.paused_hours, usage_details.update_time from sensors inner join usage_details on sensors.id = usage_details.sensor_id where sensors.user_id='$user_id'");
+                         $ses_sql = mysqli_query($db,"select SENSOR_LIST.LATITUDE, SENSOR_LIST.LONGITUDE,SENSOR_LIST.ID, SENSOR_LIST.SENSOR_ID, SENSOR_LIST.TYPE, SENSOR_LIST.IP_ADDRESS, SENSOR_LIST.STATUS, SENSOR_LIST.TIME_CREATED, usage_details.used_hours, usage_details.paused_hours, usage_details.update_time from SENSOR_LIST inner join usage_details on SENSOR_LIST.ID = usage_details.sensor_id where SENSOR_LIST.OWNER='$user_id'");
 
 						 if(!empty($ses_sql)){
                          while($row = mysqli_fetch_array($ses_sql,MYSQLI_ASSOC)){
@@ -302,34 +302,34 @@
                             
                             
                             echo '<tr>
-                            <td>'.$row["name"].'</td>
-                            <td>'.$row["type"].'</td>
-                            <td>Lat: '.$row["latitude"].' Lon: '.$row["longitude"].'</td>
-                            <td>'.$row["status"].'</td>
-                            <td>'.date_format(new DateTime($row["date"]), 'd M Y').'</td>
+                            <td>'.$row["SENSOR_ID"].'</td>
+                            <td>'.$row["TYPE"].'</td>
+                            <td>Lat: '.$row["LATITUDE"].' Lon: '.$row["LONGITUDE"].'</td>
+                            <td>'.$row["STATUS"].'</td>
+                            <td>'.date_format(new DateTime($row["TIME_CREATED"]), 'd M Y').'</td>
                             <td>'.$row["used_hours"].' hours</td>
                             <td>'.$row["paused_hours"].' hours</td>';
                             
                             echo '<td>';
-                            if ($row['status'] != "Terminated") {
+                            if ($row['STATUS'] != "Terminated") {
                               echo '<form method="post" action="">';
-                            if ($row["status"] == "Active") {
+                            if ($row["STATUS"] == "Active") {
                               echo '<input type="submit" name="action" class="btn btn-round btn-xs btn-success" value="Start" disabled/ >
                               <input type="submit" name="action" class="btn btn-round btn-xs btn-primary" value="Pause" / >
                               <input type="submit" name="action" class="btn btn-round btn-xs btn-danger" value="Stop" / >
-                              <input type="hidden" name="id" value="'.$row["id"].'" />';
+                              <input type="hidden" name="id" value="'.$row["ID"].'" />';
                             }
-                            if ($row["status"] == "Paused") {
+                            if ($row["STATUS"] == "Paused") {
                               echo '<input type="submit" name="action" class="btn btn-round btn-xs btn-success" value="Start" / >
                               <input type="submit" name="action" class="btn btn-round btn-xs btn-primary" value="Pause" disabled/ >
                               <input type="submit" name="action" class="btn btn-round btn-xs btn-danger" value="Stop" / >
-                              <input type="hidden" name="id" value="'.$row["id"].'" />';
+                              <input type="hidden" name="id" value="'.$row["ID"].'" />';
                             }
-                            if ($row["status"] == "Terminated") {
+                            if ($row["STATUS"] == "Terminated") {
                               echo '<input type="submit" name="action" class="btn btn-round btn-xs btn-success" value="Start" / >
                               <input type="submit" name="action" class="btn btn-round btn-xs btn-primary" value="Pause" / >
                               <input type="submit" name="action" class="btn btn-round btn-xs btn-danger" value="Stop" disabled/ >
-                              <input type="hidden" name="id" value="'.$row["id"].'" />';
+                              <input type="hidden" name="id" value="'.$row["ID"].'" />';
                             }
                             echo '  
                             </form>';
@@ -356,7 +356,7 @@
 
                 <div class="row">
                 <?php 
-                  $ses_sql = mysqli_query($db,"select sensors.name from sensors where sensors.user_id='$user_id' ORDER BY id DESC");
+                  $ses_sql = mysqli_query($db,"select SENSOR_LIST.SENSOR_ID from SENSOR_LIST where SENSOR_LIST.OWNER='$user_id' ORDER BY id DESC");
                   $i = 0;
 				  if(!empty($ses_sql)){
                   while($row = mysqli_fetch_array($ses_sql,MYSQLI_ASSOC)){
@@ -364,7 +364,7 @@
                             <div class="col-md-12 col-sm-12 col-xs-12">
                               <div class="x_panel">
                                 <div class="x_title">
-                                  <h2>'.$row["name"].' Data</h2>
+                                  <h2>'.$row["SENSOR_ID"].' Data</h2>
                                   
                                   <div class="clearfix"></div>
                                 </div>
@@ -525,7 +525,7 @@
         <?php 
           date_default_timezone_set("America/Los_Angeles");
               
-            $ses_sql = mysqli_query($db,"select sensors.name, type, date from sensors where sensors.user_id='$user_id' ORDER BY id DESC");
+            $ses_sql = mysqli_query($db,"select SENSOR_LIST.SENSOR_ID, TYPE, TIME_CREATED from SENSOR_LIST where SENSOR_LIST.OWNER='$user_id' ORDER BY id DESC");
             $i = 0;
             while($row = mysqli_fetch_array($ses_sql,MYSQLI_ASSOC)){
                 echo "Morris.Line({
@@ -538,7 +538,7 @@
                           data: [";
                           for($j = 1 ; $j < 30 ; $j = $j = $j + 1) {
                             
-                              if (date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s").' -'.$j.' minutes')) > date("Y-m-d H:i:s", strtotime($row["date"]))) {
+                              if (date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s").' -'.$j.' minutes')) > date("Y-m-d H:i:s", strtotime($row["TIME_CREATED"]))) {
                                 echo "{date: '".date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s").' -'.$j.' minutes'))."', value: ".rand(0,99)."},";
                               }
                               
